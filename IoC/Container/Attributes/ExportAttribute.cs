@@ -9,7 +9,6 @@ namespace IoC.Container.Attributes
     [System.AttributeUsage(System.AttributeTargets.Class)]
     public class ExportAttribute : Attribute
     {
-        //Type
         public Type AbstractType; 
 
         public ExportAttribute() { }

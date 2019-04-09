@@ -1,7 +1,5 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using IoC.Container;
-using IoC.Container.Attributes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UnitTest.Examples;
 

@@ -9,24 +9,24 @@ namespace IoC.Container
     public class Container
     {
         private readonly ICreator _creator;
-        public readonly Dictionary<Type, Type> TypesDictionary;
+        private readonly Dictionary<Type, Type> _typesDictionary;
 
         public Container(ICreator creator)
         {
             _creator = creator;
-            TypesDictionary = new Dictionary<Type, Type>();
+            _typesDictionary = new Dictionary<Type, Type>();
         }
 
         public void AddType(Type type)
         {
-            if (!TypesDictionary.ContainsKey(type))
-                TypesDictionary.Add(type, type);
+            if (!_typesDictionary.ContainsKey(type))
+                _typesDictionary.Add(type, type);
         }
 
         public void AddType(Type type, Type abstractType)
         {
-            if (!TypesDictionary.ContainsKey(abstractType))
-                TypesDictionary.Add(abstractType, type);
+            if (!_typesDictionary.ContainsKey(abstractType))
+                _typesDictionary.Add(abstractType, type);
         }
 
         public void AddAssembly(Assembly assembly)
@@ -41,13 +41,13 @@ namespace IoC.Container
                     {
                         var exportAttribute = type.GetCustomAttribute<ExportAttribute>();
                         var abstractType = exportAttribute.AbstractType;
-                        if (!TypesDictionary.ContainsKey(abstractType))
-                            TypesDictionary.Add(abstractType, type);
+                        if (!_typesDictionary.ContainsKey(abstractType))
+                            _typesDictionary.Add(abstractType, type);
                     }
                     else
                     {
-                        if (!TypesDictionary.ContainsKey(type))
-                            TypesDictionary.Add(type, type);
+                        if (!_typesDictionary.ContainsKey(type))
+                            _typesDictionary.Add(type, type);
                     }
                 }
 
@@ -55,8 +55,8 @@ namespace IoC.Container
                 {
                     if (constructorInfo.CustomAttributes.Any(c => c.AttributeType == typeof(ImportConstructorAttribute)))
                     {
-                        if (!TypesDictionary.ContainsKey(type))
-                            TypesDictionary.Add(type, type);
+                        if (!_typesDictionary.ContainsKey(type))
+                            _typesDictionary.Add(type, type);
                     }
                 }
 
@@ -64,8 +64,8 @@ namespace IoC.Container
                 {
                     if (memberInfo.CustomAttributes.Any(a => a.AttributeType == typeof(ImportAttribute)))
                     {
-                        if (!TypesDictionary.ContainsKey(type))
-                            TypesDictionary.Add(type, type);
+                        if (!_typesDictionary.ContainsKey(type))
+                            _typesDictionary.Add(type, type);
                     }
                 }
             }
@@ -79,14 +79,12 @@ namespace IoC.Container
 
         public object CreateInstance(Type type)
         {
-            if (!TypesDictionary.ContainsKey(type))
+            if (!_typesDictionary.ContainsKey(type))
             {
                 throw new Exception($"Type {type.FullName} can not be created!");
             }
 
             Type specificType = GetSpecificType(type);
-
-            //create constructor parameters, resolve dependencies
             if (!specificType.GetConstructors().Any())
             {
                 throw new Exception($"Type {specificType.FullName} don`t have public constructors!");
@@ -105,7 +103,11 @@ namespace IoC.Container
 
             var instance = _creator.Create(specificType, parametersList.ToArray());
 
-            //create members, resolve dependencies
+            if (specificType.GetCustomAttribute<ImportConstructorAttribute>() != null)
+            {
+                return instance;
+            }
+
             var properties = specificType.GetProperties()
                 .Where(p => p.CustomAttributes.Any(a => a.AttributeType == typeof(ImportAttribute)));
 
@@ -118,7 +120,7 @@ namespace IoC.Container
             return instance;
         }
 
-        public List<object> CreateParameters(Type type)
+        private List<object> CreateParameters(Type type)
         {
             if (!type.GetConstructors().Any())
             {
@@ -135,11 +137,11 @@ namespace IoC.Container
             return parametersList;
         }
 
-        public Type GetSpecificType(Type type)
+        private Type GetSpecificType(Type type)
         {
-            if (TypesDictionary.ContainsKey(type))
+            if (_typesDictionary.ContainsKey(type))
             {
-                return TypesDictionary[type];
+                return _typesDictionary[type];
             }
 
             return type;
