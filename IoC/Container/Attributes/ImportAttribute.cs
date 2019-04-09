@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IoC.Container.Attributes
 {
-    [System.AttributeUsage(System.AttributeTargets.Property)]
+    [System.AttributeUsage(System.AttributeTargets.Property | AttributeTargets.Field)]
     public class ImportAttribute : Attribute
     {
     }

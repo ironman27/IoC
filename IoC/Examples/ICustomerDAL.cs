@@ -1,4 +1,4 @@
-﻿namespace IoC.Container.Examples
+﻿namespace UnitTest.Examples
 {
     public interface ICustomerDAL
     {

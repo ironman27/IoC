@@ -34,6 +34,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.Registration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -47,9 +49,11 @@
     <Compile Include="Container\Attributes\ImportAttribute.cs" />
     <Compile Include="Container\Attributes\ImportConstructorAttribute.cs" />
     <Compile Include="Container\Container.cs" />
-    <Compile Include="Container\Examples\CustomerBLL.cs" />
-    <Compile Include="Container\Examples\ICustomerDAL.cs" />
-    <Compile Include="DependencyInjectionSample\DependencyInjectionSample.cs" />
+    <Compile Include="Container\Creator.cs" />
+    <Compile Include="Container\ICreator.cs" />
+    <Compile Include="Examples\CustomerBLL.cs" />
+    <Compile Include="Examples\ICustomerDAL.cs" />
+    <Compile Include="Examples\SimpleCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -1,11 +1,6 @@
 ﻿using IoC.Container.Attributes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace IoC.Container.Examples
+namespace UnitTest.Examples
 {
     [ImportConstructor]
     public class CustomerBLL
